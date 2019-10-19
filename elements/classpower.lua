@@ -45,8 +45,8 @@ Supported class powers:
 --]]
 local _, ns = ...
 local oUF = ns.oUF
-
-if(oUF.isClassic) then return end
+local isRetail = oUF.isRetail
+local isClassic = oUF.isClassic
 
 local _, PlayerClass = UnitClass('player')
 
@@ -104,7 +104,7 @@ local function Update(self, event, unit, powerType)
 	local cur, max, mod, oldMax
 	if (event ~= 'ClassPowerDisable') then
 		local powerID = unit == 'vehicle' and SPELL_POWER_COMBO_POINTS or ClassPowerID
-		if oUF.IsClassic then
+		if isClassic then
 			cur = _G.GetComboPoints(unit, 'target')
 		else
 			cur = UnitPower(unit, powerID, true)
@@ -117,7 +117,7 @@ local function Update(self, event, unit, powerType)
 		cur = mod == 0 and 0 or cur / mod
 
 		-- BUG: Destruction is supposed to show partial soulshards, but Affliction and Demonology should only show full ones
-		if not oUF.IsClassic then
+		if isRetail then
 			if (ClassPowerType == 'SOUL_SHARDS' and GetSpecialization() ~= SPEC_WARLOCK_DESTRUCTION) then
 				cur = cur - cur % 1
 			end
@@ -176,11 +176,11 @@ local function Visibility(self, event, unit)
 	local element = self.ClassPower
 	local shouldEnable
 
-	if not oUF.IsClassic and (UnitHasVehicleUI('player')) then
+	if isRetail and (UnitHasVehicleUI('player')) then
 		shouldEnable = PlayerVehicleHasComboPoints()
 		unit = 'vehicle'
 	elseif (ClassPowerID) then
-		if oUF.IsClassic then
+		if isClassic then
 			if (not RequirePower or RequirePower == UnitPowerType('player')) then
 				-- use 'player' instead of unit because 'SPELLS_CHANGED' is a unitless event
 				if (not RequireSpell or IsPlayerSpell(RequireSpell)) then
@@ -251,7 +251,7 @@ do
 
 		self.ClassPower.isEnabled = true
 
-		if not oUF.IsClassic and (UnitHasVehicleUI('player')) then
+		if isRetail and (UnitHasVehicleUI('player')) then
 			Path(self, 'ClassPowerEnable', 'vehicle', 'COMBO_POINTS')
 		else
 			Path(self, 'ClassPowerEnable', 'player', ClassPowerType)
@@ -279,7 +279,7 @@ do
 		ClassPowerID = SPELL_POWER_HOLY_POWER
 		ClassPowerType = 'HOLY_POWER'
 		RequireSpec = SPEC_PALADIN_RETRIBUTION
-	elseif (PlayerClass == 'WARLOCK') and not oUF.IsClassic then
+	elseif (isRetail and PlayerClass == 'WARLOCK') then
 		ClassPowerID = SPELL_POWER_SOUL_SHARDS
 		ClassPowerType = 'SOUL_SHARDS'
 	elseif (PlayerClass == 'ROGUE' or PlayerClass == 'DRUID') then
@@ -288,9 +288,9 @@ do
 
 		if (PlayerClass == 'DRUID') then
 			RequirePower = SPELL_POWER_ENERGY
-			RequireSpell = oUF.IsClassic and 768 or 5221 -- Cat form or Shred
+			RequireSpell = isClassic and 768 or 5221 -- Cat form or Shred
 		end
-	elseif (PlayerClass == 'MAGE') and not oUF.IsClassic then
+	elseif (isRetail and PlayerClass == 'MAGE') then
 		ClassPowerID = SPELL_POWER_ARCANE_CHARGES
 		ClassPowerType = 'ARCANE_CHARGES'
 		RequireSpec = SPEC_MAGE_ARCANE
@@ -304,7 +304,7 @@ local function Enable(self, unit)
 		element.__max = #element
 		element.ForceUpdate = ForceUpdate
 
-		if (RequireSpec or RequireSpell) and not oUF.IsClassic then
+		if (isRetail and (RequireSpec or RequireSpell)) then
 			self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 		end
 
@@ -333,7 +333,7 @@ end
 local function Disable(self)
 	if (self.ClassPower) then
 		ClassPowerDisable(self)
-		if not oUF.IsClassic then
+		if isRetail then
 			self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 		end
 
