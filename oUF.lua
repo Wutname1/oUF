@@ -456,6 +456,7 @@ end
 
 --[[ oUF:GetActiveStyle()
 Used to get the active style.
+
 * self - the global oUF object
 --]]
 function oUF:GetActiveStyle()

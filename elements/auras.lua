@@ -579,7 +579,7 @@ local function Enable(self)
 			-- Avoid parenting GameTooltip to frames with anchoring restrictions,
 			-- otherwise it'll inherit said restrictions which will cause issues
 			-- with its further positioning, clamping, etc
-			if (not pcall(self.GetCenter, self)) then
+			if(not pcall(self.GetCenter, self)) then
 				buffs.tooltipAnchor = 'ANCHOR_CURSOR'
 			else
 				buffs.tooltipAnchor = buffs.tooltipAnchor or 'ANCHOR_BOTTOMRIGHT'
@@ -599,7 +599,7 @@ local function Enable(self)
 			-- Avoid parenting GameTooltip to frames with anchoring restrictions,
 			-- otherwise it'll inherit said restrictions which will cause issues
 			-- with its further positioning, clamping, etc
-			if (not pcall(self.GetCenter, self)) then
+			if(not pcall(self.GetCenter, self)) then
 				debuffs.tooltipAnchor = 'ANCHOR_CURSOR'
 			else
 				debuffs.tooltipAnchor = debuffs.tooltipAnchor or 'ANCHOR_BOTTOMRIGHT'
@@ -616,7 +616,10 @@ local function Enable(self)
 			auras.createdIcons = auras.createdIcons or 0
 			auras.anchoredIcons = 0
 
-			if (not pcall(self.GetCenter, self)) then
+			-- Avoid parenting GameTooltip to frames with anchoring restrictions,
+			-- otherwise it'll inherit said restrictions which will cause issues
+			-- with its further positioning, clamping, etc
+			if(not pcall(self.GetCenter, self)) then
 				auras.tooltipAnchor = 'ANCHOR_CURSOR'
 			else
 				auras.tooltipAnchor = auras.tooltipAnchor or 'ANCHOR_BOTTOMRIGHT'

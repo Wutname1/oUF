@@ -127,7 +127,7 @@ function oUF:DisableBlizzard(unit)
 				frame.UnitFrame:HookScript('OnShow', insecureOnShow)
 				frame.UnitFrame.isHooked = true
 			end
-			
+
 			handleFrame(frame.UnitFrame, true)
 		end
 	end
