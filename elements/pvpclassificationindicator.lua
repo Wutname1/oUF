@@ -29,9 +29,7 @@ This element updates by changing the texture.
 local _, ns = ...
 local oUF = ns.oUF
 
-if oUF.IsClassic then
-	return
-end
+if(oUF.isClassic) then return end
 
 -- sourced from FrameXML/CompactUnitFrame.lua
 local ICONS = {

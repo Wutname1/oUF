@@ -7,6 +7,7 @@ end
 ns.oUF = ns.oUF
 
 local oUF = ns.oUF
+local isRetail = oUF.isRetail
 local Private = oUF.Private
 
 local argcheck = Private.argcheck
@@ -61,7 +62,7 @@ local function updateActiveUnit(self, event, unit)
 		realUnit = 'target'
 	end
 
-	if (modUnit == 'pet' and realUnit ~= 'pet') then
+	if(isRetail and modUnit == 'pet' and realUnit ~= 'pet') then
 		modUnit = 'vehicle'
 	end
 
@@ -296,11 +297,9 @@ local function initObject(unit, style, styleFunc, header, ...)
 			objectUnit = objectUnit .. suffix
 		end
 
-		if (not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
-			if not oUF.IsClassic then
-				object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
-				object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
-			end
+		if(isRetail and not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
+			object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
+			object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
 
 			-- We don't need to register UNIT_PET for the player unit. We register it
 			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE doesn't always
@@ -316,7 +315,7 @@ local function initObject(unit, style, styleFunc, header, ...)
 			object:SetAttribute('*type2', 'togglemenu')
 
 			-- No need to enable this for *target frames.
-			if (not (unit:match('target') or suffix == 'target')) then
+			if(isRetail and not (unit:match('target') or suffix == 'target')) then
 				object:SetAttribute('toggleForVehicle', true)
 			end
 
@@ -686,12 +685,15 @@ do
 		-- Expose the header through oUF.headers.
 		table.insert(headers, header)
 
+		local initialAttributeNames = '_onenter,_onleave'
+		if(isRetail) then
+			initialAttributeNames = initialAttributeNames .. ',refreshUnitChange,_onstate-vehicleui'
+		end
+
 		-- We set it here so layouts can't directly override it.
 		header:SetAttribute('initialConfigFunction', initialConfigFunction)
-		header:SetAttribute('_initialAttributeNames', '_onenter,_onleave,refreshUnitChange,_onstate-vehicleui')
-		header:SetAttribute(
-			'_initialAttribute-_onenter',
-			[[
+		header:SetAttribute('_initialAttributeNames', initialAttributeNames)
+		header:SetAttribute('_initialAttribute-_onenter', [[
 			local snippet = self:GetAttribute('clickcast_onenter')
 			if(snippet) then
 				self:Run(snippet)
@@ -705,33 +707,29 @@ do
 			if(snippet) then
 				self:Run(snippet)
 			end
-		]]
-		)
-		header:SetAttribute(
-			'_initialAttribute-refreshUnitChange',
-			[[
-			local unit = self:GetAttribute('unit')
-			if(unit) then
-				RegisterStateDriver(self, 'vehicleui', '[@' .. unit .. ',unithasvehicleui]vehicle; novehicle')
-			else
-				UnregisterStateDriver(self, 'vehicleui')
-			end
-		]]
-		)
-		header:SetAttribute(
-			'_initialAttribute-_onstate-vehicleui',
-			[[
-			local unit = self:GetAttribute('unit')
-			if(newstate == 'vehicle' and unit and UnitPlayerOrPetInRaid(unit) and not UnitTargetsVehicleInRaidUI(unit)) then
-				self:SetAttribute('toggleForVehicle', false)
-			else
-				self:SetAttribute('toggleForVehicle', true)
-			end
-		]]
-		)
+		]])
 		header:SetAttribute('oUF-headerType', isPetHeader and 'pet' or 'group')
 
-		if (Clique) then
+		if(isRetail) then
+			header:SetAttribute('_initialAttribute-refreshUnitChange', [[
+				local unit = self:GetAttribute('unit')
+				if(unit) then
+					RegisterStateDriver(self, 'vehicleui', '[@' .. unit .. ',unithasvehicleui]vehicle; novehicle')
+				else
+					UnregisterStateDriver(self, 'vehicleui')
+				end
+			]])
+			header:SetAttribute('_initialAttribute-_onstate-vehicleui', [[
+				local unit = self:GetAttribute('unit')
+				if(newstate == 'vehicle' and unit and UnitPlayerOrPetInRaid(unit) and not UnitTargetsVehicleInRaidUI(unit)) then
+					self:SetAttribute('toggleForVehicle', false)
+				else
+					self:SetAttribute('toggleForVehicle', true)
+				end
+			]])
+		end
+
+		if(Clique) then
 			SecureHandlerSetFrameRef(header, 'clickcast_header', Clique.header)
 		end
 

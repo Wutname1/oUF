@@ -24,9 +24,7 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
 local _, ns = ...
 local oUF = ns.oUF
 
-if oUF.IsClassic then
-	return
-end
+if(oUF.isClassic) then return end
 
 local function Update(self, event, unit)
 	if (unit ~= self.unit) then

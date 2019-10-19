@@ -87,13 +87,14 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
 --]]
 local _, ns = ...
 local oUF = ns.oUF
+local isClassic = oUF.isClassic
 
 local GetNetStats = GetNetStats
 local GetTime = GetTime
 local FALLBACK_ICON = [[Interface\ICONS\INV_Misc_QuestionMark]]
 local LibClassicCasterino = LibStub('LibClassicCasterino', true)
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelInfo = UnitChannelInfo
+local UnitCastingInfo = isClassic and CastingInfo or UnitCastingInfo
+local UnitChannelInfo = isClassic and ChannelInfo or UnitChannelInfo
 local EventFunctions = {}
 
 if oUF.IsClassic then

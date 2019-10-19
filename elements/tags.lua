@@ -66,6 +66,7 @@ in the `oUF.Tags.SharedEvents` table as follows: `oUF.Tags.SharedEvents.EVENT_NA
 --]]
 local _, ns = ...
 local oUF = ns.oUF
+local isRetail = oUF.isRetail
 local Private = oUF.Private
 
 local unitExists = Private.unitExists
@@ -82,7 +83,9 @@ local _ENV = {
 			end
 		end
 		return string.format('|cff%02x%02x%02x', r * 255, g * 255, b * 255)
-	end
+	end,
+	isRetail = oUF.isRetail,
+	isClassic = oUF.isClassic,
 }
 _ENV.ColorGradient = function(...)
 	return _ENV._FRAME:ColorGradient(...)
@@ -98,6 +101,7 @@ local tagStrings = {
 		end
 	end]],
 	['arcanecharges'] = [[function()
+		if(isClassic) then return end
 		if(GetSpecialization() == SPEC_MAGE_ARCANE) then
 			local num = UnitPower('player', Enum.PowerType.ArcaneCharges)
 			if(num > 0) then
@@ -106,6 +110,7 @@ local tagStrings = {
 		end
 	end]],
 	['arenaspec'] = [[function(u)
+		if(isClassic) then return end
 		local id = u:match('arena(%d)$')
 		if(id) then
 			local specID = GetArenaOpponentSpec(tonumber(id))
@@ -116,6 +121,7 @@ local tagStrings = {
 		end
 	end]],
 	['chi'] = [[function()
+		if(isClassic) then return end
 		if(GetSpecialization() == SPEC_MONK_WINDWALKER) then
 			local num = UnitPower('player', Enum.PowerType.Chi)
 			if(num > 0) then
@@ -167,7 +173,7 @@ local tagStrings = {
 	end]],
 	['difficulty'] = [[function(u)
 		if UnitCanAttack('player', u) then
-			local l = UnitLevel(u) or UnitEffectiveLevel(u)
+			local l = isRetail and UnitEffectiveLevel(u) or UnitLevel(u)
 			return Hex(GetCreatureDifficultyColor((l > 0) and l or 999))
 		end
 	end]],
@@ -185,6 +191,7 @@ local tagStrings = {
 		end
 	end]],
 	['holypower'] = [[function()
+		if(isClassic) then return end
 		if(GetSpecialization() == SPEC_PALADIN_RETRIBUTION) then
 			local num = UnitPower('player', Enum.PowerType.HolyPower)
 			if(num > 0) then
@@ -204,7 +211,7 @@ local tagStrings = {
 	end]],
 	['level'] = [[function(u)
 		local l = UnitLevel(u)
-		if not (select(4, GetBuildInfo()) < 20000) and (UnitIsWildBattlePet(u) or UnitIsBattlePetCompanion(u)) then
+		if(isRetail and (UnitIsWildBattlePet(u) or UnitIsBattlePetCompanion(u))) then
 			l = UnitBattlePetLevel(u)
 		end
 
@@ -309,6 +316,7 @@ local tagStrings = {
 		end
 	end]],
 	['runes'] = [[function()
+		if(isClassic) then return end
 		local amount = 0
 
 		for i = 1, 6 do
@@ -364,6 +372,7 @@ local tagStrings = {
 		end
 	end]],
 	['soulshards'] = [[function()
+		if(isClassic) then return end
 		local num = UnitPower('player', Enum.PowerType.SoulShards)
 		if(num > 0) then
 			return num
@@ -381,6 +390,7 @@ local tagStrings = {
 		end
 	end]],
 	['threat'] = [[function(u)
+		if(isClassic) then return end
 		local s = UnitThreatSituation(u)
 		if(s == 1) then
 			return '++'
@@ -391,6 +401,7 @@ local tagStrings = {
 		end
 	end]],
 	['threatcolor'] = [[function(u)
+		if(isClassic) then return end
 		return Hex(GetThreatStatusColor(UnitThreatSituation(u)))
 	end]]
 }
@@ -459,10 +470,6 @@ local vars = setmetatable({}, {
 _ENV._VARS = vars
 
 local tagEvents = {
-	['affix']               = 'UNIT_CLASSIFICATION_CHANGED',
-	['arcanecharges']       = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE',
-	['arenaspec']           = 'ARENA_PREP_OPPONENT_SPECIALIZATIONS',
-	['chi']                 = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE',
 	['classification']      = 'UNIT_CLASSIFICATION_CHANGED',
 	['cpoints']             = 'UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED',
 	['curhp']               = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH',
@@ -471,9 +478,8 @@ local tagEvents = {
 	['dead']                = 'UNIT_HEALTH_FREQUENT',
 	['deficit:name']        = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_NAME_UPDATE',
 	['difficulty']          = 'UNIT_FACTION',
-	['faction']             = 'NEUTRAL_FACTION_SELECT_RESULT',
+	['faction']             = 'UNIT_FACTION',
 	['group']               = 'GROUP_ROSTER_UPDATE',
-	['holypower']           = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE',
 	['leader']              = 'PARTY_LEADER_CHANGED',
 	['leaderlong']          = 'PARTY_LEADER_CHANGED',
 	['level']               = 'UNIT_LEVEL PLAYER_LEVEL_UP',
@@ -491,25 +497,38 @@ local tagEvents = {
 	['pvp']                 = 'UNIT_FACTION',
 	['rare']                = 'UNIT_CLASSIFICATION_CHANGED',
 	['resting']             = 'PLAYER_UPDATE_RESTING',
-	['runes']               = 'RUNE_POWER_UPDATE',
 	['shortclassification'] = 'UNIT_CLASSIFICATION_CHANGED',
 	['smartlevel']          = 'UNIT_LEVEL PLAYER_LEVEL_UP UNIT_CLASSIFICATION_CHANGED',
-	['soulshards']          = 'UNIT_POWER_UPDATE',
-	['status']              = 'UNIT_HEALTH_FREQUENT PLAYER_UPDATE_RESTING UNIT_CONNECTION',
-	['threat']              = 'UNIT_THREAT_SITUATION_UPDATE',
-	['threatcolor']         = 'UNIT_THREAT_SITUATION_UPDATE',
+	['status']              = 'UNIT_HEALTH PLAYER_UPDATE_RESTING UNIT_CONNECTION',
 }
 
+if(isRetail) then
+	tagEvents['affix']         = 'UNIT_CLASSIFICATION_CHANGED'
+	tagEvents['arcanecharges'] = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
+	tagEvents['arenaspec']     = 'ARENA_PREP_OPPONENT_SPECIALIZATIONS'
+	tagEvents['chi']           = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
+	tagEvents['faction']       = 'UNIT_FACTION NEUTRAL_FACTION_SELECT_RESULT'
+	tagEvents['holypower']     = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
+	tagEvents['runes']         = 'RUNE_POWER_UPDATE'
+	tagEvents['soulshards']    = 'UNIT_POWER_UPDATE'
+	tagEvents['threat']        = 'UNIT_THREAT_SITUATION_UPDATE'
+	tagEvents['threatcolor']   = 'UNIT_THREAT_SITUATION_UPDATE'
+end
+
 local unitlessEvents = {
-	ARENA_PREP_OPPONENT_SPECIALIZATIONS = true,
 	GROUP_ROSTER_UPDATE = true,
-	NEUTRAL_FACTION_SELECT_RESULT = true,
 	PARTY_LEADER_CHANGED = true,
 	PLAYER_LEVEL_UP = true,
 	PLAYER_TARGET_CHANGED = true,
 	PLAYER_UPDATE_RESTING = true,
 	RUNE_POWER_UPDATE = true
 }
+
+if(isRetail) then
+	unitlessEvents.ARENA_PREP_OPPONENT_SPECIALIZATIONS = true
+	unitlessEvents.NEUTRAL_FACTION_SELECT_RESULT = true
+	unitlessEvents.RUNE_POWER_UPDATE = true
+end
 
 local events = {}
 local eventFrame = CreateFrame('Frame')

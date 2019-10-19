@@ -46,6 +46,8 @@ Supported class powers:
 local _, ns = ...
 local oUF = ns.oUF
 
+if(oUF.isClassic) then return end
+
 local _, PlayerClass = UnitClass('player')
 
 -- sourced from FrameXML/Constants.lua
