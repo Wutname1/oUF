@@ -522,6 +522,7 @@ eventFrame:SetScript('OnEvent', function(self, event, unit)
 			end
 		end
 	end
+end
 )
 
 local onUpdates = {}
