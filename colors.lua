@@ -129,8 +129,10 @@ end
 -- alternate power, sourced from FrameXML/CompactUnitFrame.lua
 colors.power[10] = {0.7, 0.7, 0.6}
 
-for i = 0, 3 do
-	colors.threat[i] = {GetThreatStatusColor(i)}
+if(oUF.isRetail) then
+	for i = 0, 3 do
+		colors.threat[i] = {GetThreatStatusColor(i)}
+	end
 end
 
 local function colorsAndPercent(a, b, ...)
