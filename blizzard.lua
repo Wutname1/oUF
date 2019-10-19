@@ -1,5 +1,5 @@
 local parent, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 -- sourced from Blizzard_ArenaUI/Blizzard_ArenaUI.lua
 local MAX_ARENA_ENEMIES = MAX_ARENA_ENEMIES or 5
@@ -61,7 +61,7 @@ local function handleFrame(baseName, doNotReparent)
 	end
 end
 
-function SUF:DisableBlizzard(unit)
+function oUF:DisableBlizzard(unit)
 	if(not unit) then return end
 
 	if(unit == 'player') then
@@ -69,7 +69,7 @@ function SUF:DisableBlizzard(unit)
 
 		-- For the damn vehicle support:
 		PlayerFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
-		if not SUF.IsClassic then
+		if not oUF.IsClassic then
 			PlayerFrame:RegisterEvent('UNIT_ENTERING_VEHICLE')
 			PlayerFrame:RegisterEvent('UNIT_ENTERED_VEHICLE')
 			PlayerFrame:RegisterEvent('UNIT_EXITING_VEHICLE')

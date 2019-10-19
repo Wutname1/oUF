@@ -46,12 +46,12 @@ The following options are listed by priority. The first check that returns true 
     Background:SetAllPoints(AdditionalPower)
     Background:SetTexture(1, 1, 1, .5)
 
-    -- Register it with SUF
+    -- Register it with oUF
     AdditionalPower.bg = Background
     self.AdditionalPower = AdditionalPower
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local _, playerClass = UnitClass('player')
 
@@ -163,14 +163,14 @@ end
 local function Visibility(self, event, unit)
 	local element = self.AdditionalPower
 	local shouldEnable
-	if not SUF.IsClassic and (not UnitHasVehicleUI('player')) then
+	if not oUF.IsClassic and (not UnitHasVehicleUI('player')) then
 		if (UnitPowerMax(unit, ADDITIONAL_POWER_BAR_INDEX) ~= 0) then
 			if (element.displayPairs[playerClass]) then
 				local powerType = UnitPowerType(unit)
 				shouldEnable = element.displayPairs[playerClass][powerType]
 			end
 		end
-	elseif SUF.IsClassic and playerClass == 'DRUID' and unit == 'player' then
+	elseif oUF.IsClassic and playerClass == 'DRUID' and unit == 'player' then
 		local form = GetShapeshiftForm()
 		if form == 1 or form == 2 or form == 3 then
 			shouldEnable = true
@@ -192,7 +192,7 @@ local function VisibilityPath(self, ...)
 	* event - the event triggering the update (string)
 	* unit  - the unit accompanying the event (string)
 	--]]
-	-- if SUF.IsClassic then
+	-- if oUF.IsClassic then
 	-- 	return
 	-- end
 	return (self.AdditionalPower.OverrideVisibility or Visibility)(self, ...)
@@ -211,7 +211,7 @@ local function Enable(self, unit)
 		self:RegisterEvent('UNIT_POWER_UPDATE', VisibilityPath)
 		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 
-		if (not element.displayPairs and not SUF.IsClassic) then
+		if (not element.displayPairs and not oUF.IsClassic) then
 			element.displayPairs = CopyTable(ALT_MANA_BAR_PAIR_DISPLAY_INFO)
 		end
 
@@ -236,4 +236,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('AdditionalPower', VisibilityPath, Enable, Disable)
+oUF:AddElement('AdditionalPower', VisibilityPath, Enable, Disable)

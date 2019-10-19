@@ -18,12 +18,12 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     RestingIndicator:SetSize(16, 16)
     RestingIndicator:SetPoint('TOPLEFT', self)
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.RestingIndicator = RestingIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function Update(self, event)
 	local element = self.RestingIndicator
@@ -95,4 +95,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('RestingIndicator', Path, Enable, Disable)
+oUF:AddElement('RestingIndicator', Path, Enable, Disable)

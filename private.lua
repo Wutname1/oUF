@@ -1,5 +1,5 @@
 local parent, ns = ...
-local Private = ns.SUF.Private
+local Private = ns.oUF.Private
 
 function Private.argcheck(value, num, ...)
 	assert(type(num) == 'number', "Bad argument #2 to 'argcheck' (number expected, got " .. type(num) .. ')')
@@ -14,7 +14,7 @@ function Private.argcheck(value, num, ...)
 end
 
 function Private.print(...)
-	print('|cff33ff99SUF:|r', ...)
+	print('|cff33ff99oUF:|r', ...)
 end
 
 function Private.error(...)

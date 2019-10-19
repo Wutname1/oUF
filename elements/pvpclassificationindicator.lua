@@ -22,14 +22,14 @@ This element updates by changing the texture.
     PvPClassificationIndicator:SetSize(24, 24)
     PvPClassificationIndicator:SetPoint('CENTER')
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.PvPClassificationIndicator = PvPClassificationIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
-if SUF.IsClassic then
+if oUF.IsClassic then
 	return
 end
 
@@ -120,4 +120,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('PvPClassificationIndicator', Path, Enable, Disable)
+oUF:AddElement('PvPClassificationIndicator', Path, Enable, Disable)

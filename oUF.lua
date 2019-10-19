@@ -1,13 +1,13 @@
 local parent, ns = ...
-local global = GetAddOnMetadata(parent, 'X-SUF')
+local global = GetAddOnMetadata(parent, 'X-oUF')
 local _VERSION = '@project-version@'
 if (_VERSION:find('project%-version')) then
 	_VERSION = 'devel'
 end
-ns.oUF = ns.SUF
+ns.oUF = ns.oUF
 
-local SUF = ns.SUF
-local Private = SUF.Private
+local oUF = ns.oUF
+local Private = oUF.Private
 
 local argcheck = Private.argcheck
 local error = Private.error
@@ -20,7 +20,7 @@ local callback, objects, headers = {}, {}, {}
 local elements = {}
 local activeElements = {}
 
-SUF.IsClassic = select(4, GetBuildInfo()) < 20000
+oUF.IsClassic = select(4, GetBuildInfo()) < 20000
 
 local PetBattleFrameHider =
 	CreateFrame('Frame', (global or parent) .. '_PetBattleFrameHider', UIParent, 'SecureHandlerStateTemplate')
@@ -93,7 +93,7 @@ local function onAttributeChanged(self, name, value)
 			iterateChildren(self:GetChildren())
 		end
 
-		if (not self:GetAttribute('SUF-onlyProcessChildren')) then
+		if (not self:GetAttribute('oUF-onlyProcessChildren')) then
 			updateActiveUnit(self, 'OnAttributeChanged')
 		end
 	end
@@ -277,27 +277,27 @@ local function initObject(unit, style, styleFunc, header, ...)
 	local num = select('#', ...)
 	for i = 1, num do
 		local object = select(i, ...)
-		local objectUnit = object:GetAttribute('SUF-guessUnit') or unit
+		local objectUnit = object:GetAttribute('oUF-guessUnit') or unit
 		local suffix = object:GetAttribute('unitsuffix')
 
 		object.__elements = {}
 		object.style = style
 		object = setmetatable(object, frame_metatable)
 
-		-- Expose the frame through SUF.objects.
+		-- Expose the frame through .objects.
 		table.insert(objects, object)
 
 		-- We have to force update the frames when PEW fires.
 		object:RegisterEvent('PLAYER_ENTERING_WORLD', object.UpdateAllElements, true)
 
 		-- Handle the case where someone has modified the unitsuffix attribute in
-		-- SUF-initialConfigFunction.
+		-- -initialConfigFunction.
 		if (suffix and not objectUnit:match(suffix)) then
 			objectUnit = objectUnit .. suffix
 		end
 
 		if (not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
-			if not SUF.IsClassic then
+			if not oUF.IsClassic then
 				object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
 				object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
 			end
@@ -324,7 +324,7 @@ local function initObject(unit, style, styleFunc, header, ...)
 			if (suffix == 'target') then
 				enableTargetUpdate(object)
 			else
-				SUF:HandleUnit(object)
+				oUF:HandleUnit(object)
 			end
 		else
 			-- update the frame when its prev unit is replaced with a new one
@@ -378,10 +378,10 @@ local function walkObject(object, unit)
 	local style = parent.style or style
 	local styleFunc = styles[style]
 
-	local header = parent:GetAttribute('SUF-headerType') and parent
+	local header = parent:GetAttribute('oUF-headerType') and parent
 
 	-- Check if we should leave the main frame blank.
-	if (object:GetAttribute('SUF-onlyProcessChildren')) then
+	if (object:GetAttribute('oUF-onlyProcessChildren')) then
 		object.hasChildren = true
 		object:HookScript('OnAttributeChanged', onAttributeChanged)
 		return initObject(unit, style, styleFunc, header, object:GetChildren())
@@ -390,24 +390,24 @@ local function walkObject(object, unit)
 	return initObject(unit, style, styleFunc, header, object, object:GetChildren())
 end
 
---[[ SUF:RegisterInitCallback(func)
+--[[ oUF:RegisterInitCallback(func)
 Used to add a function to a table to be executed upon unit frame/header initialization.
 
-* self - the global SUF object
+* self - the global oUF object
 * func - function to be added
 --]]
-function SUF:RegisterInitCallback(func)
+function oUF:RegisterInitCallback(func)
 	table.insert(callback, func)
 end
 
---[[ SUF:RegisterMetaFunction(name, func)
+--[[ oUF:RegisterMetaFunction(name, func)
 Used to make a (table of) function(s) available to all unit frames.
 
-* self - the global SUF object
+* self - the global oUF object
 * name - unique name of the function (string)
 * func - function or a table of functions (function or table)
 --]]
-function SUF:RegisterMetaFunction(name, func)
+function oUF:RegisterMetaFunction(name, func)
 	argcheck(name, 2, 'string')
 	argcheck(func, 3, 'function', 'table')
 
@@ -418,14 +418,14 @@ function SUF:RegisterMetaFunction(name, func)
 	frame_metatable.__index[name] = func
 end
 
---[[ SUF:RegisterStyle(name, func)
-Used to register a style with SUF. This will also set the active style if it hasn't been set yet.
+--[[ oUF:RegisterStyle(name, func)
+Used to register a style with oUF. This will also set the active style if it hasn't been set yet.
 
-* self - the global SUF object
+* self - the global oUF object
 * name - name of the style
 * func - function(s) defining the style (function or table)
 --]]
-function SUF:RegisterStyle(name, func)
+function oUF:RegisterStyle(name, func)
 	argcheck(name, 2, 'string')
 	argcheck(func, 3, 'function', 'table')
 
@@ -439,13 +439,13 @@ function SUF:RegisterStyle(name, func)
 	styles[name] = func
 end
 
---[[ SUF:SetActiveStyle(name)
+--[[ oUF:SetActiveStyle(name)
 Used to set the active style.
 
-* self - the global SUF object
+* self - the global oUF object
 * name - name of the style (string)
 --]]
-function SUF:SetActiveStyle(name)
+function oUF:SetActiveStyle(name)
 	argcheck(name, 2, 'string')
 	if (not styles[name]) then
 		return error('Style [%s] does not exist.', name)
@@ -454,11 +454,11 @@ function SUF:SetActiveStyle(name)
 	style = name
 end
 
---[[ SUF:GetActiveStyle()
+--[[ oUF:GetActiveStyle()
 Used to get the active style.
-* self - the global SUF object
+* self - the global oUF object
 --]]
-function SUF:GetActiveStyle()
+function oUF:GetActiveStyle()
 	return style
 end
 
@@ -468,12 +468,12 @@ do
 		return (next(styles, n))
 	end
 
-	--[[ SUF:IterateStyles()
+	--[[ oUF:IterateStyles()
 	Returns an iterator over all registered styles.
 
-	* self - the global SUF object
+	* self - the global oUF object
 	--]]
-	function SUF.IterateStyles()
+	function oUF.IterateStyles()
 		return iter, nil, nil
 	end
 end
@@ -506,12 +506,12 @@ do
 end
 
 local function generateName(unit, ...)
-	local name = 'SUF_' .. style:gsub('^SUF_?', ''):gsub('[^%a%d_]+', '')
+	local name = 'oUF_' .. style:gsub('^oUF_?', ''):gsub('[^%a%d_]+', '')
 
 	local raid, party, groupFilter, unitsuffix
 	for i = 1, select('#', ...), 2 do
 		local att, val = select(i, ...)
-		if (att == 'SUF-initialConfigFunction') then
+		if (att == 'oUF-initialConfigFunction') then
 			unitsuffix = val:match('unitsuffix[%p%s]+(%a+)')
 		elseif (att == 'showRaid') then
 			raid = val ~= false and val ~= nil
@@ -552,9 +552,9 @@ local function generateName(unit, ...)
 		name = name .. append .. (unitsuffix or '')
 	end
 
-	-- Change SUF_LilyRaidRaid into SUF_LilyRaid
+	-- Change oUF_LilyRaidRaid into oUF_LilyRaid
 	name = name:gsub('(%u%l+)([%u%l]*)%1', '%1')
-	-- Change SUF_LilyTargettarget into SUF_LilyTargetTarget
+	-- Change oUF_LilyTargettarget into oUF_LilyTargetTarget
 	name = name:gsub('t(arget)', 'T%1')
 	name = name:gsub('p(et)', 'P%1')
 	name = name:gsub('f(ocus)', 'F%1')
@@ -585,7 +585,7 @@ do
 			local frame = frames[i]
 			local unit
 			-- There's no need to do anything on frames with onlyProcessChildren
-			if(not frame:GetAttribute('SUF-onlyProcessChildren')) then
+			if(not frame:GetAttribute('oUF-onlyProcessChildren')) then
 				RegisterUnitWatch(frame)
 
 				-- Attempt to guess what the header is set to spawn.
@@ -604,7 +604,7 @@ do
 					unit = 'party'
 				end
 
-				local headerType = header:GetAttribute('SUF-headerType')
+				local headerType = header:GetAttribute('oUF-headerType')
 				local suffix = frame:GetAttribute('unitsuffix')
 				if(unit and suffix) then
 					if(headerType == 'pet' and suffix == 'target') then
@@ -618,10 +618,10 @@ do
 
 				frame:SetAttribute('*type1', 'target')
 				frame:SetAttribute('*type2', 'togglemenu')
-				frame:SetAttribute('SUF-guessUnit', unit)
+				frame:SetAttribute('oUF-guessUnit', unit)
 			end
 
-			local body = header:GetAttribute('SUF-initialConfigFunction')
+			local body = header:GetAttribute('oUF-initialConfigFunction')
 			if(body) then
 				frame:Run(body, unit)
 			end
@@ -636,10 +636,10 @@ do
 		end
 	]]
 
-	--[[ SUF:SpawnHeader(overrideName, template, visibility, ...)
+	--[[ oUF:SpawnHeader(overrideName, template, visibility, ...)
 	Used to create a group header and apply the currently active style to it.
 
-	* self         - the global SUF object
+	* self         - the global oUF object
 	* overrideName - unique global name to be used for the header. Defaults to an auto-generated name based on the name
 	                 of the active style and other arguments passed to `:SpawnHeader` (string?)
 	* template     - name of a template to be used for creating the header. Defaults to `'SecureGroupHeaderTemplate'`
@@ -648,14 +648,14 @@ do
 	* ...          - further argument pairs. Consult [Group Headers](http://wowprogramming.com/docs/secure_template/Group_Headers.html)
 	                 for possible values.
 
-	In addition to the standard group headers, SUF implements some of its own attributes. These can be supplied by the
+	In addition to the standard group headers, oUF implements some of its own attributes. These can be supplied by the
 	layout, but are optional.
 
-	* SUF-initialConfigFunction - can contain code that will be securely run at the end of the initial secure
+	* oUF-initialConfigFunction - can contain code that will be securely run at the end of the initial secure
 	                              configuration (string?)
-	* SUF-onlyProcessChildren   - can be used to force headers to only process children (boolean?)
+	* oUF-onlyProcessChildren   - can be used to force headers to only process children (boolean?)
 	--]]
-	function SUF:SpawnHeader(overrideName, template, visibility, ...)
+	function oUF:SpawnHeader(overrideName, template, visibility, ...)
 		if (not style) then
 			return error('Unable to create frame. No styles have been registered.')
 		end
@@ -682,7 +682,7 @@ do
 		header.styleFunction = styleProxy
 		header.visibility = visibility
 
-		-- Expose the header through SUF.headers.
+		-- Expose the header through oUF.headers.
 		table.insert(headers, header)
 
 		-- We set it here so layouts can't directly override it.
@@ -728,7 +728,7 @@ do
 			end
 		]]
 		)
-		header:SetAttribute('SUF-headerType', isPetHeader and 'pet' or 'group')
+		header:SetAttribute('oUF-headerType', isPetHeader and 'pet' or 'group')
 
 		if (Clique) then
 			SecureHandlerSetFrameRef(header, 'clickcast_header', Clique.header)
@@ -754,19 +754,19 @@ do
 	end
 end
 
---[[ SUF:Spawn(unit, overrideName)
+--[[ oUF:Spawn(unit, overrideName)
 Used to create a single unit frame and apply the currently active style to it.
 
-* self         - the global SUF object
+* self         - the global oUF object
 * unit         - the frame's unit (string)
 * overrideName - unique global name to use for the unit frame. Defaults to an auto-generated name based on the unit
                  (string?)
 
-SUF implements some of its own attributes. These can be supplied by the layout, but are optional.
+oUF implements some of its own attributes. These can be supplied by the layout, but are optional.
 
-* SUF-enableArenaPrep - can be used to toggle arena prep support. Defaults to true (boolean)
+* oUF-enableArenaPrep - can be used to toggle arena prep support. Defaults to true (boolean)
 --]]
-function SUF:Spawn(unit, overrideName)
+function oUF:Spawn(unit, overrideName)
 	argcheck(unit, 2, 'string')
 	if (not style) then
 		return error('Unable to create frame. No styles have been registered.')
@@ -787,24 +787,24 @@ function SUF:Spawn(unit, overrideName)
 	return object
 end
 
---[[ SUF:SpawnNamePlates(prefix, callback, variables)
+--[[ oUF:SpawnNamePlates(prefix, callback, variables)
 Used to create nameplates and apply the currently active style to them.
 
-* self      - the global SUF object
+* self      - the global oUF object
 * prefix    - prefix for the global name of the nameplate. Defaults to an auto-generated prefix (string?)
 * callback  - function to be called after a nameplate unit or the player's target has changed. The arguments passed to
               the callback are the updated nameplate, if any, the event that triggered the update, and the new unit
               (function?)
 * variables - list of console variable-value pairs to be set when the player logs in (table?)
 --]]
-function SUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
+function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	argcheck(nameplateCallback, 3, 'function', 'nil')
 	argcheck(nameplateCVars, 4, 'table', 'nil')
 	if (not style) then
 		return error('Unable to create frame. No styles have been registered.')
 	end
-	if (SUF_NamePlateDriver) then
-		return error('SUF nameplate driver has already been initialized.')
+	if (oUF_NamePlateDriver) then
+		return error('oUF nameplate driver has already been initialized.')
 	end
 
 	local style = style
@@ -823,7 +823,7 @@ function SUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 		end
 	)
 
-	local eventHandler = CreateFrame('Frame', 'SUF_NamePlateDriver')
+	local eventHandler = CreateFrame('Frame', 'oUF_NamePlateDriver')
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_ADDED')
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_REMOVED')
 	eventHandler:RegisterEvent('PLAYER_TARGET_CHANGED')
@@ -903,16 +903,16 @@ function SUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	)
 end
 
---[[ SUF:AddElement(name, update, enable, disable)
-Used to register an element with SUF.
+--[[ oUF:AddElement(name, update, enable, disable)
+Used to register an element with oUF.
 
-* self    - the global SUF object
+* self    - the global oUF object
 * name    - unique name of the element (string)
 * update  - used to update the element (function?)
 * enable  - used to enable the element for a given unit frame and unit (function?)
 * disable - used to disable the element for a given unit frame (function?)
 --]]
-function SUF:AddElement(name, update, enable, disable)
+function oUF:AddElement(name, update, enable, disable)
 	argcheck(name, 2, 'string')
 	argcheck(update, 3, 'function', 'nil')
 	argcheck(enable, 4, 'function', 'nil')
@@ -928,22 +928,22 @@ function SUF:AddElement(name, update, enable, disable)
 	}
 end
 
-SUF.version = _VERSION
---[[ SUF.objects
-Array containing all unit frames created by `SUF:Spawn`.
+oUF.version = _VERSION
+--[[ oUF.objects
+Array containing all unit frames created by `oUF:Spawn`.
 --]]
-SUF.objects = objects
---[[ SUF.headers
-Array containing all group headers created by `SUF:SpawnHeader`.
+oUF.objects = objects
+--[[ oUF.headers
+Array containing all group headers created by `oUF:SpawnHeader`.
 --]]
-SUF.headers = headers
+oUF.headers = headers
 
 if (global) then
-	if (parent ~= 'SUF' and global == 'SUF') then
-		error('%s is doing it wrong and setting its global to "SUF".', parent)
+	if (parent ~= 'oUF' and global == 'oUF') then
+		error('%s is doing it wrong and setting its global to "oUF".', parent)
 	elseif (_G[global]) then
 		error('%s is setting its global to an existing name "%s".', parent, global)
 	else
-		_G[global] = SUF
+		_G[global] = oUF
 	end
 end

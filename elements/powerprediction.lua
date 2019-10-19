@@ -33,7 +33,7 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
     altBar:SetPoint('RIGHT', self.AdditionalPower:GetStatusBarTexture(), 'RIGHT')
     altBar:SetWidth(200)
 
-    -- Register with SUF
+    -- Register with oUF
     self.PowerPrediction = {
         mainBar = mainBar,
         altBar = altBar
@@ -41,7 +41,7 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 -- sourced from FrameXML/AlternatePowerBar.lua
 local ADDITIONAL_POWER_BAR_INDEX = ADDITIONAL_POWER_BAR_INDEX or 0
@@ -182,4 +182,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('PowerPrediction', Path, Enable, Disable)
+oUF:AddElement('PowerPrediction', Path, Enable, Disable)

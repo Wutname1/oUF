@@ -63,11 +63,11 @@ button.isPlayer - indicates if the aura caster is the player or their vehicle (b
     Buffs:SetPoint('RIGHT', self, 'LEFT')
     Buffs:SetSize(16 * 2, 16 * 16)
 
-    -- Register with SUF
+    -- Register with oUF
     self.Buffs = Buffs
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local VISIBLE = 1
 local HIDDEN = 0
@@ -645,4 +645,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('Auras', Update, Enable, Disable)
+oUF:AddElement('Auras', Update, Enable, Disable)

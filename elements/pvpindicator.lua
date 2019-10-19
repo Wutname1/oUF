@@ -27,14 +27,14 @@ The `Badge` sub-widget has to be on a lower sub-layer than the `PvP` texture.
     Badge:SetSize(50, 52)
     Badge:SetPoint('CENTER', PvPIndicator, 'CENTER')
 
-    -- Register it with SUF
+    -- Register it with oUF
     PvPIndicator.Badge = Badge
     self.PvPIndicator = PvPIndicator
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
--- if SUF.IsClassic then
+-- if oUF.IsClassic then
 -- 	return
 -- end
 
@@ -59,14 +59,14 @@ local function Update(self, event, unit)
 	local status
 	local factionGroup = UnitFactionGroup(unit) or 'Neutral'
 	local honorRewardInfo = false
-	if not SUF.IsClassic then
+	if not oUF.IsClassic then
 		honorRewardInfo = C_PvP.GetHonorRewardInfo(UnitHonorLevel(unit))
 	end
 
 	if (UnitIsPVPFreeForAll(unit)) then
 		status = 'FFA'
 	elseif (factionGroup ~= 'Neutral' and UnitIsPVP(unit)) then
-		if not SUF.IsClassic then
+		if not oUF.IsClassic then
 			if (unit == 'player' and UnitIsMercenary(unit)) then
 				if (factionGroup == 'Horde') then
 					factionGroup = 'Alliance'
@@ -138,7 +138,7 @@ local function Enable(self)
 		element.ForceUpdate = ForceUpdate
 
 		self:RegisterEvent('UNIT_FACTION', Path)
-		if not SUF.IsClassic then
+		if not oUF.IsClassic then
 			self:RegisterEvent('HONOR_LEVEL_UPDATE', Path, true)
 		end
 
@@ -156,10 +156,10 @@ local function Disable(self)
 		end
 
 		self:UnregisterEvent('UNIT_FACTION', Path)
-		if not SUF.IsClassic then
+		if not oUF.IsClassic then
 			self:UnregisterEvent('HONOR_LEVEL_UPDATE', Path)
 		end
 	end
 end
 
-SUF:AddElement('PvPIndicator', Path, Enable, Disable)
+oUF:AddElement('PvPIndicator', Path, Enable, Disable)

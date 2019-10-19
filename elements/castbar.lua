@@ -75,7 +75,7 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
     -- Add safezone
     local SafeZone = Castbar:CreateTexture(nil, 'OVERLAY')
 
-    -- Register it with SUF
+    -- Register it with oUF
     Castbar.bg = Background
     Castbar.Spark = Spark
     Castbar.Time = Time
@@ -86,7 +86,7 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
     self.Castbar = Castbar
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local GetNetStats = GetNetStats
 local GetTime = GetTime
@@ -96,7 +96,7 @@ local UnitCastingInfo = UnitCastingInfo
 local UnitChannelInfo = UnitChannelInfo
 local EventFunctions = {}
 
-if SUF.IsClassic then
+if oUF.IsClassic then
 	UnitCastingInfo = CastingInfo
 	UnitChannelInfo = ChannelInfo
 end
@@ -421,7 +421,7 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		if LibClassicCasterino and SUF.IsClassic then
+		if LibClassicCasterino and oUF.IsClassic then
 			local CastbarEventHandler = function(event, ...)
 				return EventFunctions[event](self, event, ...)
 			end
@@ -443,7 +443,7 @@ local function Enable(self, unit)
 			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', CastUpdate)
 			self:RegisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
 			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
-			if not SUF.IsClassic then
+			if not oUF.IsClassic then
 				self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 				self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
 			end
@@ -494,7 +494,7 @@ local function Disable(self)
 	if (element) then
 		element:Hide()
 
-		if LibClassicCasterino and SUF.IsClassic then
+		if LibClassicCasterino and oUF.IsClassic then
 			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_START')
 			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_DELAYED')
 			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_STOP')
@@ -512,7 +512,7 @@ local function Disable(self)
 			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', CastStop)
 			self:UnregisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
 			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
-			if not SUF.IsClassic then
+			if not oUF.IsClassic then
 				self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 				self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
 			end
@@ -527,7 +527,7 @@ local function Disable(self)
 	end
 end
 
-if LibClassicCasterino and SUF.IsClassic then
+if LibClassicCasterino and oUF.IsClassic then
 	UnitCastingInfo = function(unit)
 		return LibClassicCasterino:UnitCastingInfo(unit)
 	end
@@ -546,4 +546,4 @@ if LibClassicCasterino and SUF.IsClassic then
 	EventFunctions['UNIT_SPELLCAST_CHANNEL_STOP'] = CastStop
 end
 
-SUF:AddElement('Castbar', Update, Enable, Disable)
+oUF:AddElement('Castbar', Update, Enable, Disable)

@@ -18,12 +18,12 @@ This element updates by changing the texture.
     RaidRoleIndicator:SetSize(16, 16)
     RaidRoleIndicator:SetPoint('TOPLEFT')
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.RaidRoleIndicator = RaidRoleIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local MAINTANK_ICON = [[Interface\GROUPFRAME\UI-GROUP-MAINTANKICON]]
 local MAINASSIST_ICON = [[Interface\GROUPFRAME\UI-GROUP-MAINASSISTICON]]
@@ -103,4 +103,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('RaidRoleIndicator', Path, Enable, Disable)
+oUF:AddElement('RaidRoleIndicator', Path, Enable, Disable)

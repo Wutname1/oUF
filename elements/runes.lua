@@ -38,14 +38,14 @@ A default texture will be applied if the sub-widgets are StatusBars and don't ha
         Runes[index] = Rune
     end
 
-    -- Register with SUF
+    -- Register with oUF
     self.Runes = Runes
 --]]
 
 if(select(2, UnitClass('player')) ~= 'DEATHKNIGHT') then return end
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local runemap = {1, 2, 3, 4, 5, 6}
 local hasSortOrder = false
@@ -211,4 +211,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('Runes', Path, Enable, Disable)
+oUF:AddElement('Runes', Path, Enable, Disable)

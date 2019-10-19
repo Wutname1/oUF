@@ -18,12 +18,12 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     LeaderIndicator:SetSize(16, 16)
     LeaderIndicator:SetPoint('BOTTOM', self, 'TOP')
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.LeaderIndicator = LeaderIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function Update(self, event)
 	local element = self.LeaderIndicator
@@ -98,4 +98,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('LeaderIndicator', Path, Enable, Disable)
+oUF:AddElement('LeaderIndicator', Path, Enable, Disable)

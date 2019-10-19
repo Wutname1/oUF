@@ -18,11 +18,11 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     PhaseIndicator:SetSize(16, 16)
     PhaseIndicator:SetPoint('TOPLEFT', self)
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.PhaseIndicator = PhaseIndicator
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function Update(self, event, unit)
 	if (self.unit ~= unit) then
@@ -76,7 +76,7 @@ end
 local function Enable(self)
 	local element = self.PhaseIndicator
 	if (element) then
-		if SUF.IsClassic then
+		if oUF.IsClassic then
 			element:Hide()
 			return
 		end
@@ -103,4 +103,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('PhaseIndicator', Path, Enable, Disable)
+oUF:AddElement('PhaseIndicator', Path, Enable, Disable)

@@ -18,11 +18,11 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     GroupRoleIndicator:SetSize(16, 16)
     GroupRoleIndicator:SetPoint('LEFT', self)
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.GroupRoleIndicator = GroupRoleIndicator
 --]]
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function Update(self, event)
 	local element = self.GroupRoleIndicator
@@ -57,7 +57,7 @@ end
 
 local function Path(self, ...)
 	-- Hide the element if Classic WoW, avoid going any farther
-	if SUF.IsClassic then
+	if oUF.IsClassic then
 		if (self.GroupRoleIndicator) then
 			self.GroupRoleIndicator:Hide()
 		end
@@ -81,7 +81,7 @@ local function Enable(self)
 	local element = self.GroupRoleIndicator
 	if (element) then
 		-- Hide the element if Classic WoW
-		if SUF.IsClassic then
+		if oUF.IsClassic then
 			element:Hide()
 			return
 		end
@@ -113,4 +113,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('GroupRoleIndicator', Path, Enable, Disable)
+oUF:AddElement('GroupRoleIndicator', Path, Enable, Disable)

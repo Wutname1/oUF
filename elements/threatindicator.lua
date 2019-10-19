@@ -24,12 +24,12 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     ThreatIndicator:SetSize(16, 16)
     ThreatIndicator:SetPoint('TOPRIGHT', self)
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.ThreatIndicator = ThreatIndicator
 --]]
 local _, ns = ...
-local SUF = ns.SUF
-local Private = SUF.Private
+local oUF = ns.oUF
+local Private = oUF.Private
 
 local unitExists = Private.unitExists
 
@@ -92,7 +92,7 @@ end
 
 local function Path(self, ...)
 	-- Hide the element if Classic WoW
-	if SUF.IsClassic and self.ThreatIndicator then
+	if oUF.IsClassic and self.ThreatIndicator then
 		self.ThreatIndicator:Hide()
 		return
 	end
@@ -116,7 +116,7 @@ local function Enable(self)
 
 	if (element) then
 		-- Hide the element if Classic WoW
-		if SUF.IsClassic then
+		if oUF.IsClassic then
 			element:Hide()
 			return
 		end
@@ -145,4 +145,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('ThreatIndicator', Path, Enable, Disable)
+oUF:AddElement('ThreatIndicator', Path, Enable, Disable)

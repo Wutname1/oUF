@@ -1,6 +1,6 @@
 local parent, ns = ...
-local SUF = ns.SUF
-local Private = SUF.Private
+local oUF = ns.oUF
+local Private = oUF.Private
 
 local argcheck = Private.argcheck
 local error = Private.error

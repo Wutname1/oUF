@@ -41,12 +41,12 @@ OnEnter and OnLeave script handlers will be set to display a Tooltip if the `Tot
         Totems[index] = Totem
     end
 
-    -- Register with SUF
+    -- Register with oUF
     self.Totems = Totems
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function UpdateTooltip(self)
 	GameTooltip:SetTotem(self:GetID())
@@ -181,4 +181,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('Totems', Update, Enable, Disable)
+oUF:AddElement('Totems', Update, Enable, Disable)

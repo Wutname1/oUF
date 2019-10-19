@@ -18,12 +18,12 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     AssistantIndicator:SetSize(16, 16)
     AssistantIndicator:SetPoint('TOP', self)
 
-    -- Register it with SUF
+    -- Register it with oUF
     self.AssistantIndicator = AssistantIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
+local oUF = ns.oUF
 
 local function Update(self, event)
 	local element = self.AssistantIndicator
@@ -96,4 +96,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('AssistantIndicator', Path, Enable, Disable)
+oUF:AddElement('AssistantIndicator', Path, Enable, Disable)

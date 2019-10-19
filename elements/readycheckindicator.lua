@@ -32,13 +32,13 @@ Default textures will be applied if the layout does not provide custom ones. See
     ReadyCheckIndicator:SetSize(16, 16)
     ReadyCheckIndicator:SetPoint('TOP')
 
-    -- Register with SUF
+    -- Register with oUF
     self.ReadyCheckIndicator = ReadyCheckIndicator
 --]]
 
 local _, ns = ...
-local SUF = ns.SUF
-local Private = SUF.Private
+local oUF = ns.oUF
+local Private = oUF.Private
 
 local unitExists = Private.unitExists
 
@@ -160,4 +160,4 @@ local function Disable(self)
 	end
 end
 
-SUF:AddElement('ReadyCheckIndicator', Path, Enable, Disable)
+oUF:AddElement('ReadyCheckIndicator', Path, Enable, Disable)

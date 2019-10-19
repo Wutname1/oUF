@@ -31,7 +31,7 @@ local UnitInRaid = UnitInRaid
 local UnitIsUnit = UnitIsUnit
 
 local function Update(self, event)
-  if not SUF.IsClassic then
+  if not oUF.IsClassic then
     return
   end
 	local unit = self.unit
@@ -102,7 +102,7 @@ local function Enable(self, unit)
 	if(element) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
-    if not SUF.IsClassic then
+    if not oUF.IsClassic then
       element:Hide()
       return
     end
@@ -122,7 +122,7 @@ local function Disable(self)
 	local element = self.MasterLooterIndicator
 	if(element) then
 		element:Hide()
-    if not SUF.IsClassic then
+    if not oUF.IsClassic then
       return
     end
     
