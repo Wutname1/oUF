@@ -69,6 +69,7 @@ The following options are listed by priority. The first check that returns true 
     AdditionalPower.bg = Background
     self.AdditionalPower = AdditionalPower
 --]]
+
 local _, ns = ...
 local oUF = ns.oUF
 
@@ -105,15 +106,15 @@ local function UpdateColor(self, event, unit, powertype)
 		r, g, b = self:ColorGradient(element.cur or 1, element.max or 1, unpack(element.smoothGradient or self.colors.smooth))
 	end
 
-	if (t) then
+	if(t) then
 		r, g, b = t[1], t[2], t[3]
 	end
 
-	if (b) then
+	if(b) then
 		element:SetStatusBarColor(r, g, b)
 
 		local bg = element.bg
-		if (bg) then
+		if(bg) then
 			local mu = bg.multiplier or 1
 			bg:SetVertexColor(r * mu, g * mu, b * mu)
 		end
@@ -137,9 +138,7 @@ local function ColorPath(self, ...)
 end
 
 local function Update(self, event, unit, powertype)
-	if (not (unit and UnitIsUnit(unit, 'player') and powertype == ADDITIONAL_POWER_BAR_NAME)) then
-		return
-	end
+	if(not (unit and UnitIsUnit(unit, 'player') and powertype == ADDITIONAL_POWER_BAR_NAME)) then return end
 
 	local element = self.AdditionalPower
 	--[[ Callback: AdditionalPower:PreUpdate(unit)
@@ -176,7 +175,7 @@ local function Update(self, event, unit, powertype)
 	* cur  - the current value of the player's additional power (number)
 	* max  - the maximum value of the player's additional power (number)
 	--]]
-	if (element.PostUpdate) then
+	if(element.PostUpdate) then
 		return element:PostUpdate(unit, cur, max)
 	end
 end
@@ -244,21 +243,21 @@ end
 local function Visibility(self, event, unit)
 	local element = self.AdditionalPower
 	local shouldEnable
-	if not oUF.IsClassic and (not UnitHasVehicleUI('player')) then
+	if oUF.isRetail and (not UnitHasVehicleUI('player')) then
 		if (UnitPowerMax(unit, ADDITIONAL_POWER_BAR_INDEX) ~= 0) then
 			if (element.displayPairs[playerClass]) then
 				local powerType = UnitPowerType(unit)
 				shouldEnable = element.displayPairs[playerClass][powerType]
 			end
 		end
-	elseif oUF.IsClassic and playerClass == 'DRUID' and unit == 'player' then
+	elseif oUF.isClassic and playerClass == 'DRUID' and unit == 'player' then
 		local form = GetShapeshiftForm()
 		if form == 1 or form == 2 or form == 3 then
 			shouldEnable = true
 		end
 	end
 
-	if (shouldEnable) then
+	if(shouldEnable) then
 		ElementEnable(self)
 	else
 		ElementDisable(self)
@@ -369,7 +368,7 @@ end
 
 local function Enable(self, unit)
 	local element = self.AdditionalPower
-	if (element) then
+	if(element and UnitIsUnit(unit, 'player')) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 		element.SetColorDisconnected = SetColorDisconnected
@@ -378,14 +377,13 @@ local function Enable(self, unit)
 		element.SetColorThreat = SetColorThreat
 		element.SetFrequentUpdates = SetFrequentUpdates
 
-		self:RegisterEvent('UNIT_POWER_UPDATE', VisibilityPath)
 		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 
-		if (not element.displayPairs and not oUF.IsClassic) then
+		if(oUF.isRetail and not element.displayPairs) then
 			element.displayPairs = CopyTable(ALT_MANA_BAR_PAIR_DISPLAY_INFO)
 		end
 
-		if (element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
+		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
 
@@ -395,7 +393,7 @@ end
 
 local function Disable(self)
 	local element = self.AdditionalPower
-	if (element) then
+	if(element) then
 		ElementDisable(self)
 
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
