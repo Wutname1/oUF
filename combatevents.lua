@@ -34,7 +34,7 @@ local function filter(_, event, ...)
 	end
 end
 
-listener:SetScript('OnEvent', function(self, event)
+listener:SetScript('OnEvent', function()
 	filter(CombatLogGetCurrentEventInfo())
 end)
 
