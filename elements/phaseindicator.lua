@@ -36,6 +36,8 @@ OnEnter and/or OnLeave handlers.
 local _, ns = ...
 local oUF = ns.oUF
 
+if(oUF.IsClassic) then return end
+
 --[[ Override: PhaseIndicator:UpdateTooltip()
 Used to populate the tooltip when the widget is hovered.
 
