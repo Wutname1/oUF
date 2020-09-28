@@ -201,100 +201,11 @@ local function ForceUpdate(element)
 	Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
---[[ Health:SetColorDisconnected(state)
-Used to toggle coloring if the unit is offline.
-
-* self  - the Health element
-* state - the desired state (boolean)
---]]
-local function SetColorDisconnected(element, state)
-	if(element.colorDisconnected ~= state) then
-		element.colorDisconnected = state
-		if(element.colorDisconnected) then
-			element.__owner:RegisterEvent('UNIT_CONNECTION', ColorPath)
-		else
-			element.__owner:UnregisterEvent('UNIT_CONNECTION', ColorPath)
-		end
-	end
-end
-
---[[ Health:SetColorSelection(state)
-Used to toggle coloring by the unit's selection.
-
-* self  - the Health element
-* state - the desired state (boolean)
---]]
-local function SetColorSelection(element, state)
-	if(element.colorSelection ~= state) then
-		element.colorSelection = state
-		if(element.colorSelection) then
-			element.__owner:RegisterEvent('UNIT_FLAGS', ColorPath)
-		else
-			element.__owner:UnregisterEvent('UNIT_FLAGS', ColorPath)
-		end
-	end
-end
-
---[[ Health:SetColorTapping(state)
-Used to toggle coloring if the unit isn't tapped by the player.
-
-* self  - the Health element
-* state - the desired state (boolean)
---]]
-local function SetColorTapping(element, state)
-	if(element.colorTapping ~= state) then
-		element.colorTapping = state
-		if(element.colorTapping) then
-			element.__owner:RegisterEvent('UNIT_FACTION', ColorPath)
-		else
-			element.__owner:UnregisterEvent('UNIT_FACTION', ColorPath)
-		end
-	end
-end
-
---[[ Health:SetColorThreat(state)
-Used to toggle coloring by the unit's threat status.
-
-* self  - the Health element
-* state - the desired state (boolean)
---]]
-local function SetColorThreat(element, state)
-	if(element.colorThreat ~= state) then
-		element.colorThreat = state
-		if(element.colorThreat) then
-			element.__owner:RegisterEvent('UNIT_THREAT_LIST_UPDATE', ColorPath)
-		else
-			element.__owner:UnregisterEvent('UNIT_THREAT_LIST_UPDATE', ColorPath)
-		end
-	end
-end
-
-
 local function Enable(self, unit)
 	local element = self.Health
 	if(element) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
-		element.SetColorDisconnected = SetColorDisconnected
-		element.SetColorSelection = SetColorSelection
-		element.SetColorTapping = SetColorTapping
-		element.SetColorThreat = SetColorThreat
-
-		if(element.colorDisconnected) then
-			self:RegisterEvent('UNIT_CONNECTION', ColorPath)
-		end
-
-		if(element.colorSelection) then
-			self:RegisterEvent('UNIT_FLAGS', ColorPath)
-		end
-
-		if(element.colorTapping) then
-			self:RegisterEvent('UNIT_FACTION', ColorPath)
-		end
-
-		if(element.colorThreat) then
-			self:RegisterEvent('UNIT_THREAT_LIST_UPDATE', ColorPath)
-		end
 
 		self:RegisterEvent('UNIT_HEALTH', Path)
 		self:RegisterEvent('UNIT_MAXHEALTH', Path)
