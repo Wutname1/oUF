@@ -28,7 +28,7 @@
 	<Script file="elements\tags.lua"/>
 	<Script file="elements\totems.lua"/>
 
-	<!--@retail@-->
+	<!--Retail-->
 	<Script file="elements\alternativepower.lua"/>
 	<Script file="elements\classpower.lua"/>
 	<Script file="elements\grouproleindicator.lua"/>
@@ -41,13 +41,11 @@
 	<Script file="elements\stagger.lua"/>
 	<Script file="elements\summonindicator.lua"/>
 	<Script file="elements\threatindicator.lua"/>
-	<!--@end-retail@-->
 
-	<!--@non-retail@-->
+	<!--Classic-->
 	<Script file="elements\classpowerclassic.lua"/>
 	<Script file="elements\happinessindicator.lua"/>
 	<Script file="elements\masterlooterindicator.lua"/>
-	<!--@end-non-retail@-->
 
 	<Script file="finalize.lua"/>
 
