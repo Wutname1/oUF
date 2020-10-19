@@ -89,14 +89,17 @@ local function UpdateColor(element, powerType)
 	* g    - the green component of the used color (number)[0-1]
 	* b    - the blue component of the used color (number)[0-1]
 	--]]
-	if(element.PostUpdateColor) then
+	if (element.PostUpdateColor) then
 		element:PostUpdateColor(r, g, b)
 	end
 end
 
 local function Update(self, event, unit, powerType)
-	if(not (unit and (UnitIsUnit(unit, 'player') and (not powerType or powerType == ClassPowerType)
-		or unit == 'vehicle' and powerType == 'COMBO_POINTS'))) then
+	if
+		(not (unit and
+			(UnitIsUnit(unit, 'player') and (not powerType or powerType == ClassPowerType) or
+				unit == 'vehicle' and powerType == 'COMBO_POINTS')))
+	 then
 		return
 	end
 
@@ -112,7 +115,7 @@ local function Update(self, event, unit, powerType)
 	end
 
 	local cur, max, mod, oldMax, chargedIndex
-	if(event ~= 'ClassPowerDisable') then
+	if (event ~= 'ClassPowerDisable') then
 		local powerID = unit == 'vehicle' and SPELL_POWER_COMBO_POINTS or ClassPowerID
 		if isClassic then
 			cur = _G.GetComboPoints(unit, 'target')
@@ -133,7 +136,7 @@ local function Update(self, event, unit, powerType)
 			end
 		end
 
-		if(PlayerClass == 'ROGUE') then
+		if (PlayerClass == 'ROGUE') and isRetail then
 			local chargedPoints = GetUnitChargedPowerPoints(unit)
 			-- according to Blizzard there will only be one
 			chargedIndex = chargedPoints and chargedPoints[1]
@@ -172,7 +175,7 @@ local function Update(self, event, unit, powerType)
 	* powerType     - the active power type (string)
 	* chargedIndex  - the index of the currently charged power point (number?)
 	--]]
-	if(element.PostUpdate) then
+	if (element.PostUpdate) then
 		return element:PostUpdate(cur, max, oldMax ~= max, powerType, chargedIndex)
 	end
 end
@@ -246,16 +249,16 @@ local function Visibility(self, event, unit)
 		* self      - the ClassPower element
 		* isVisible - the current visibility state of the element (boolean)
 		--]]
-		if(element.PostVisibility) then
+		if (element.PostVisibility) then
 			element:PostVisibility(true)
 		end
-	elseif(not shouldEnable and (isEnabled or isEnabled == nil)) then
+	elseif (not shouldEnable and (isEnabled or isEnabled == nil)) then
 		ClassPowerDisable(self)
 
-		if(element.PostVisibility) then
+		if (element.PostVisibility) then
 			element:PostVisibility(false)
 		end
-	elseif(shouldEnable and isEnabled) then
+	elseif (shouldEnable and isEnabled) then
 		Path(self, event, unit, powerType)
 	end
 end
@@ -280,7 +283,7 @@ do
 		self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
 		self:RegisterEvent('UNIT_MAXPOWER', Path)
 
-		if(PlayerClass == 'ROGUE') then
+		if (PlayerClass == 'ROGUE') then
 			self:RegisterEvent('UNIT_POWER_POINT_CHARGE', Path)
 		end
 
@@ -314,7 +317,7 @@ do
 	elseif (PlayerClass == 'PALADIN') then
 		ClassPowerID = SPELL_POWER_HOLY_POWER
 		ClassPowerType = 'HOLY_POWER'
-	elseif(PlayerClass == 'WARLOCK') then
+	elseif (PlayerClass == 'WARLOCK') then
 		ClassPowerID = SPELL_POWER_SOUL_SHARDS
 		ClassPowerType = 'SOUL_SHARDS'
 	elseif (PlayerClass == 'ROGUE' or PlayerClass == 'DRUID') then
@@ -352,8 +355,8 @@ local function Enable(self, unit)
 
 		for i = 1, #element do
 			local bar = element[i]
-			if(bar:IsObjectType('StatusBar')) then
-				if(not (bar:GetStatusBarTexture() or bar:GetStatusBarAtlas())) then
+			if (bar:IsObjectType('StatusBar')) then
+				if (not (bar:GetStatusBarTexture() or bar:GetStatusBarAtlas())) then
 					bar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 				end
 
