@@ -283,7 +283,7 @@ do
 		self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
 		self:RegisterEvent('UNIT_MAXPOWER', Path)
 
-		if (PlayerClass == 'ROGUE') then
+		if (PlayerClass == 'ROGUE') and isRetail then
 			self:RegisterEvent('UNIT_POWER_POINT_CHARGE', Path)
 		end
 
@@ -299,7 +299,9 @@ do
 	function ClassPowerDisable(self)
 		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
-		self:UnregisterEvent('UNIT_POWER_POINT_CHARGE', Path)
+		if isRetail then
+			self:UnregisterEvent('UNIT_POWER_POINT_CHARGE', Path)
+		end
 
 		local element = self.ClassPower
 		for i = 1, #element do
