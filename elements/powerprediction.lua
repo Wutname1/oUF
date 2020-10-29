@@ -43,6 +43,7 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
 local _, ns = ...
 local oUF = ns.oUF
 local isRetail = oUF.isRetail
+local isClassic = oUF.isClassic
 
 -- sourced from FrameXML/AlternatePowerBar.lua
 local ADDITIONAL_POWER_BAR_INDEX = ADDITIONAL_POWER_BAR_INDEX or 0
@@ -146,7 +147,7 @@ end
 
 local function Enable(self, unit)
 	local element = self.PowerPrediction
-	if(element and isRetail and UnitIsUnit(unit, 'player')) then
+	if (element and (UnitIsUnit(unit, 'player') or isClassic)) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
